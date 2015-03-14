@@ -1,3 +1,9 @@
+# This code is based on the public domain code written by Stephen C Phillips.
+# http://blog.scphillips.com/2012/12/a-python-class-to-move-the-stepper-motor/
+ 
+# It works on the Raspberry Pi computer with the standard Debian Wheezy OS and
+# the 28BJY-48 stepper motor with ULN2003 control board.
+
 from time import sleep
 import RPi.GPIO as GPIO
 
