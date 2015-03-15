@@ -9,11 +9,17 @@ import RPi.GPIO as GPIO
 
 class Motor(object):
     
-    def __init__(self, pins):
+    def __init__(self, pins, fullStepping = None):
         self.pins = pins
         self.degreesPerStep = 5.625 / 64
         self.stepsPerRevolution = int(360 / self.degreesPerStep)  # 4096
         self.stepAngle = 0
+
+        # 1 for halfstepping, 2 for fullstepping
+        if (fullStepping):
+            self.seqStepSize = 2
+        else:
+            self.seqStepSize = 1
 
         for pin in pins:
             GPIO.setup(pin, GPIO.OUT)
@@ -23,17 +29,34 @@ class Motor(object):
 
     def _setRpm(self, rpm):
         """ Set the speed in RPM """
+
+        # Tune this to meet the motor's capabilities
+        # 28BYJ-48 will skip steps if delay is too short
+        if (self.seqStepSize == 1 and rpm > 16):
+            rpm = 16
+        elif (self.seqStepSize == 2 and rpm > 7):
+            rpm = 7
+
         self._rpm = rpm
         # _delay is how long to wait between step signals
         self._delay = (60.0 / rpm) / self.stepsPerRevolution
-        # Tune this to meet the motor's capabilities
-        # 28BYJ-48 will skip steps if delay is too short
-        if (self._delay < 0.0009):
-            self._delay = 0.0009
+        
 
     # This lambda allows setting of rpm as if it were an attribute
     # while maintaining the _delay value
     rpm = property(lambda self: self._rpm, _setRpm)
+
+    # The clockwise and anticlockwise step sequence for 28BJY-48 stepper motors
+    _cw_seq = [ [1,0,0,0],
+                [1,1,0,0],
+                [0,1,0,0],
+                [0,1,1,0],
+                [0,0,1,0],
+                [0,0,1,1],
+                [0,0,0,1],
+                [1,0,0,1]]
+
+    _acw_seq = list(reversed(_cw_seq))
 
     def moveTo(self, angle):
         """Take the shortest route to a particular angle (degrees)."""
@@ -44,57 +67,23 @@ class Motor(object):
         if steps > self.stepsPerRevolution / 2:
             steps -= self.stepsPerRevolution
             print "moving " + `steps` + " steps"
-            self._anticlockwise(-steps / 8)
+            self.rotate(-steps / 8, True)
         else:
             print "moving " + `steps` + " steps"
-            self._clockwise(steps / 8)
+            self.rotate(steps / 8)
         self.stepAngle = targetAngle
 
-    def _anticlockwise(self, steps):
-        GPIO.output(self.pins[0], 0)
-        GPIO.output(self.pins[1], 0)
-        GPIO.output(self.pins[2], 0)
-        GPIO.output(self.pins[3], 0)
-        for i in range(steps):
-            GPIO.output(self.pins[0], 0)
-            sleep(self._delay)
-            GPIO.output(self.pins[2], 1)
-            sleep(self._delay)
-            GPIO.output(self.pins[3], 0)
-            sleep(self._delay)
-            GPIO.output(self.pins[1], 1)
-            sleep(self._delay)
-            GPIO.output(self.pins[2], 0)
-            sleep(self._delay)
-            GPIO.output(self.pins[0], 1)
-            sleep(self._delay)
-            GPIO.output(self.pins[1], 0)
-            sleep(self._delay)
-            GPIO.output(self.pins[3], 1)
-            sleep(self._delay)
+    def rotate(self, steps, anticlockwise = None):
+        sequence = self._cw_seq
 
-    def _clockwise(self, steps):
-        GPIO.output(self.pins[0], 0)
-        GPIO.output(self.pins[1], 0)
-        GPIO.output(self.pins[2], 0)
-        GPIO.output(self.pins[3], 0)
+        if (anticlockwise):
+            sequence = self._acw_seq
+
         for i in range(steps):
-            GPIO.output(self.pins[2], 0)
-            sleep(self._delay)
-            GPIO.output(self.pins[0], 1)
-            sleep(self._delay)
-            GPIO.output(self.pins[3], 0)
-            sleep(self._delay)
-            GPIO.output(self.pins[1], 1)
-            sleep(self._delay)
-            GPIO.output(self.pins[0], 0)
-            sleep(self._delay)
-            GPIO.output(self.pins[2], 1)
-            sleep(self._delay)
-            GPIO.output(self.pins[1], 0)
-            sleep(self._delay)
-            GPIO.output(self.pins[3], 1)
-            sleep(self._delay)
+            for position in range(0, 8, self.seqStepSize):
+                for pin  in range(0, 4):
+                    GPIO.output(self.pins[pin], sequence[position][pin])
+                sleep(self._delay)
 
         
     def release(self):
@@ -104,7 +93,7 @@ class Motor(object):
 if __name__ == "__main__":
     GPIO.setmode(GPIO.BCM)
     m = Motor([7,8,9,10])
-    m.rpm = 15
+    m.rpm = 16
     print "Pause in seconds: " + `m._delay`
     #m.moveTo(90)
     #sleep(1)
@@ -115,22 +104,6 @@ if __name__ == "__main__":
     #m.moveTo(-180)
     #sleep(1)
     m.moveTo(180)
-    m.moveTo(360)
     sleep(1)
-    m.moveTo(-45)
-    sleep(1)
-    m.moveTo(-90)
-    sleep(1)
-    m.moveTo(-135)
-    sleep(1)
-    m.moveTo(-180)
-    sleep(1)
-    m.moveTo(-225)
-    sleep(1)
-    m.moveTo(-270)
-    sleep(1)
-    m.moveTo(-315)
-    sleep(1)
-    m.moveTo(0)
-    sleep(1)
+    m.moveTo(1)
     GPIO.cleanup()
