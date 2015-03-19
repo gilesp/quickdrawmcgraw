@@ -1,54 +1,25 @@
-from math import acos, cos, sin, degrees
+from math import acos, atan, degrees, sqrt
 
-x = 4.0
-y = 3.0
-la = 5.0
-lb = 5.0
+a = float(5)
+b = float(5)
 
-x2 = x**2
-y2 = y**2
-la2 = la**2
-lb2 = lb**2
+x = float(1)
+y = float(5)
 
+c = sqrt(x**2 + y**2)
 
+print "c: " + str(c)
 
-print "x = " + str(x)
-print "y = " + str(y)
-print "la = " + str(la)
-print "lb = " + str(lb)
-print "x^2 = " + str(x2)
-print "y^2 = " + str(y2)
-print "la^2 = " + str(la2)
-print "lb^2 = " + str(lb2)
+angle2 = degrees(acos((a**2 + b**2 - c) / (2 * a * b)))
 
-top = x2 + y2 -la2 -lb2
-bottom = 2 * la * lb
+print "atan(y/x) "+ str(atan(y/x))
+print "acos... " + str(acos(((a**2) - (b**2)) + c / ((2 * a) * c)))
 
-print "top = " + str(top)
-print "bottom = " + str(bottom)
+angle1 = degrees(atan(y/x) + acos(((a**2) - (b**2)) + c / ((2 * a) * c)))
 
-inner = top/bottom
+print "angle1 = " + str(angle1)
+print "angle2 = " + str(angle2)
 
-print "inner = " + str(inner)
+angle2inv = 180 - angle2
 
-angle2 = acos(inner)
-
-print "angle2 = " + str(degrees(angle2))
-
-sinAngle2 = sin(angle2)
-cosAngle2 = cos(angle2)
-topLeft = (lb * sinAngle2) * x
-topRight = (la + lb * cosAngle2) * y
-top = -topLeft + topRight
-
-print "top = " + str(top)
-
-bottomLeft = (lb * sinAngle2) * y
-bottomRight = (la + lb * cosAngle2) * x
-bottom = bottomLeft + bottomRight
-
-print "bottom = " + str(bottom)
-
-angle1 = top / bottom
-
-print "angle1 = " + str(degrees(angle1))
+print "angle2inv = " + str(angle2inv)
