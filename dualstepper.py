@@ -81,15 +81,54 @@ class MotorController(object):
         seq1 = self.motor1.acw_sequence if motor1AC else self.motor1.cw_sequence
         seq2 = self.motor2.acw_sequence if motor2AC else self.motor2.cw_sequence
 
-        for i in range(max(steps1, steps2)):
+        # This currently means that the two motors won't reach their target position
+        # at the same time. I should really create an array of steps for each motor, 
+        # of equal length - padding out the shorter one with non-movements, then
+        # both motors would arrive together, regardless of how much they move.
+
+        length = max(steps1, steps2)
+#        m1Positions = self._createPositionArray(steps1, length)
+#        m2Positions = self._createPositionArray(steps2, length)
+        
+#        for i in range(length):
+#            for pin in range(0, 4):
+#                if(m1Positions[i] != -1):
+#                    GPIO.output(self.motor1.pins[pin], seq1[m1Positions[i]][pin])
+#                if (m2Positions[i] != -1):
+#                    GPIO.output(self.motor2.pins[pin], seq2[m2Positions[i]][pin])
+#            sleep(self._delay)
+
+        for i in range(length):
             for position in range(0, 8, 1):
                 for pin in range(0, 4):
                     if (i <= steps1):
                         GPIO.output(self.motor1.pins[pin], seq1[position][pin])
                     if (i <= steps2):
                         GPIO.output(self.motor2.pins[pin], seq2[position][pin])
-                    sleep(self._delay)
+                sleep(self._delay)
 
+    def _createPositionArray(self, steps, length):
+        print "length: " + `length`
+        print "steps: " + `steps`
+        diff = length - steps
+
+        ddd = int(diff / steps)
+            
+        print "diff: " + `diff`
+
+        positions = [-1] * length
+
+        p = 0
+        for i in range(length):
+            
+            if (diff == 0 or i%ddd == 0 ):
+                positions[i] = p
+                p+=1
+                if (p > 8):
+                    p = 0
+            
+        print "Positions: " + `positions`
+        return positions
 
 if __name__ == "__main__":
 
@@ -100,7 +139,7 @@ if __name__ == "__main__":
     m1.release()
     m2.release()
     controller = MotorController(m1, m2)
-    controller.rpm = 15
+    controller.rpm = 16
 
     controller.moveTo(float(sys.argv[1]), float(sys.argv[2]))
     GPIO.cleanup()
