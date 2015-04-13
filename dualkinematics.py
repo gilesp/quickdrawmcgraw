@@ -1,4 +1,4 @@
-from math import acos, atan2, degrees, sqrt
+from math import acos, atan, asin, sin, degrees, sqrt
 
 class Kinematics(object) :
 
@@ -12,21 +12,37 @@ class Kinematics(object) :
         self.r1 = float(r1)
         self.r2 = float(r2)
 
+    def computeAngle(self, x, y, l1, l2):
+        c = sqrt(x**2 + y**2)
+        e = self.cosineRule(c, l2, l1)
+        a = atan(y/x)
+        b = asin((sin(e)/c) * l1)
+        return a+b
+
+    def cosineRule(self, a, b, c):
+        print "a=" + str(a)
+        print "b=" + str(b)
+        print "c=" + str(c)
+        top = b**2 + c**2 - a**2
+        print "top=" + str(top)
+        bottom = 2 * b * c
+        print "bottom=" + str(bottom)
+        cosA = top / bottom
+        print "cosA=" + str(cosA)
+        A = acos(cosA)
+        print "A=" + str(A)
+        return A
+
     def computeAngles(self, x, y):
-        m1angle = self._motorAngle(x - self.m1x, y - self.m1y, self.l1, self.l2)
-        m2angle = self._motorAngle(x - self.m2x, y - self.m2y, self.r1, self.r2)
-        return (m1angle, m2angle)
+        motor1 = self.computeAngle(x, -(self.m1y + y), self.l1, self.l2)
+        diff = self.m2x - self.m1x
+        motor2 = self.computeAngle(diff - x, -(self.m2y + y), self.r1, self.r2)
+        return (degrees(motor1), degrees(motor2))
 
-    def _motorAngle(self, dx, dy, l1, l2):
-        c = sqrt(dx**2 + dy**2)
-        a1 = atan2(dy, dx)
-        a2 = self._cosinerule(l1, l2, c)
-        angle = degrees(a1 + a2) - 90
-        return angle
-
-    def _cosinerule(self, a, b, c):
-        return acos(((b**2 + c**2) - a**2) / (2 * b * c))
-
+    # Based on this diagram:
+    # http://forums.reprap.org/file.php?185,file=18866,filename=wally_diagram2.png
+    # More info here:
+    # http://forum.conceptforge.org/viewtopic.php?f=7&t=184&sid=9642f5c924e64be15d224c51d4deb6f9
 
 if __name__ == "__main__":
     k = Kinematics(66, -25,  159, -26, 111, 110, 114, 111)
