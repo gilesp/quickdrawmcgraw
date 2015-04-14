@@ -1,4 +1,5 @@
 from math import acos, atan, asin, sin, degrees, sqrt
+from pythagoras import cosineRule
 
 class Kinematics(object) :
 
@@ -14,24 +15,10 @@ class Kinematics(object) :
 
     def computeAngle(self, x, y, l1, l2):
         c = sqrt(x**2 + y**2)
-        e = self.cosineRule(c, l2, l1)
+        e = cosineRule(l1, l2, c)
         a = atan(y/x)
         b = asin((sin(e)/c) * l1)
         return a+b
-
-    def cosineRule(self, a, b, c):
-        print "a=" + str(a)
-        print "b=" + str(b)
-        print "c=" + str(c)
-        top = b**2 + c**2 - a**2
-        print "top=" + str(top)
-        bottom = 2 * b * c
-        print "bottom=" + str(bottom)
-        cosA = top / bottom
-        print "cosA=" + str(cosA)
-        A = acos(cosA)
-        print "A=" + str(A)
-        return A
 
     def computeAngles(self, x, y):
         motor1 = self.computeAngle(x, -(self.m1y + y), self.l1, self.l2)
