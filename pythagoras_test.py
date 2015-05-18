@@ -1,5 +1,6 @@
 import unittest
-from pythagoras import cosineRule
+from math import degrees
+from pythagoras import cosineRule, angleA
 
 class TestPythagoras(unittest.TestCase):
 
@@ -20,6 +21,19 @@ class TestPythagoras(unittest.TestCase):
         angle = cosineRule(111, 110, 180)
         angle_as_string = "{0:.2f}".format(angle)
         self.assertEqual(angle_as_string, "1.90")
+
+    def test_cosineRule_equals_angleA(self):
+        self.assertEquals(angleA(4, 2, 3), cosineRule(2, 3, 4))
+
+    def test_interior_angles_equal_180(self):
+        a = 2
+        b = 3
+        c = 4
+        A = angleA(2, 3, 4)
+        B = angleA(3, 4, 2)
+        C = angleA(4, 2, 3)
+        totalInRads = A + B + C
+        self.assertEquals(degrees(totalInRads), 180)
 
 if __name__ == '__main__':
     unittest.main()
