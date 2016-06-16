@@ -1,0 +1,15 @@
+#+TITLE: Drawing Machine Bill of Materials
+#+OPTIONS: toc:nil author:nil
+
+Not really a bill of materials, just a list of stuff I've used when
+making the drawing machine.
+
+| Area       | Item        | Dimensions        | Quantity | Notes                          |
+|------------+-------------+-------------------+----------+--------------------------------|
+| Frame      | Nanobeam    | 300mm x 5mm x 5mm |        4 |                                |
+|            | L Joints    |                   |        4 |                                |
+| Gantry     | Nanobeam    | 300mm x 5mm x 5mm |        1 |                                |
+|            | cross slide |                   |        2 | To allow movement along Y axis |
+| Pen Holder | Nanobeam    | 50mm x 5mm x 5mm  |        2 |                                |
+|            | Nanobeam    | 20mm x 5mm x 5mm  |        2 |                                |
+|            | cross slide |                   |        2 | To allow movement along X axis |

@@ -4,6 +4,9 @@
 Thoughts and notes on building a [[http://corexy.com/theory.html][corexy]] style crawing machine
 (plotter?) using [[http://nanobeam.us/][nanobeam]] aluminium extrusion
 
+I'm using Tinkercad to
+[[https://www.tinkercad.com/dashboard/projects/lWJfVcbC5sg-drawing-machine][plan out the machine and design the components]]
+
 * General Thoughts
   Controlled using raspberyy pi zero, with a 4tronix quad stepper
   motor hat.
@@ -24,5 +27,7 @@ Thoughts and notes on building a [[http://corexy.com/theory.html][corexy]] style
    #+CAPTION: Small stepper motor
    #+NAME: fig:stepper1
    [[./motor.jpg]]
+
+
 
 
