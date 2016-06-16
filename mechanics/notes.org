@@ -2,7 +2,7 @@
 #+OPTIONS: toc:nil author:nil
 #+TODO: TODO INPROGRESS DONE
 Thoughts and notes on building a [[http://corexy.com/theory.html][corexy]] style crawing machine
-(plotter?) using [[nanobeam.us][nanobeam]] aluminium extrusion
+(plotter?) using [[http://nanobeam.us/][nanobeam]] aluminium extrusion
 
 * General Thoughts
   Controlled using raspberyy pi zero, with a 4tronix quad stepper
@@ -21,5 +21,8 @@ Thoughts and notes on building a [[http://corexy.com/theory.html][corexy]] style
    Intended to be used in scanners? Certainly, look the same as ones
    in Canon lide scanners I've disassembled. Probably high speed but
    low torque so will need some gearing to move the mechanism around.
+   #+CAPTION: Small stepper motor
+   #+NAME: fig:stepper1
+   [[./motor.jpg]]
 
-*** TODO Add picture OF MOTOR
+
