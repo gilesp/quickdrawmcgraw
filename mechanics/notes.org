@@ -1,0 +1,22 @@
+#+TITLE: CoreXY Drawing Machine thoughts
+#+OPTIONS: toc:nil author:nil
+Thoughts and notes on building a corexy style crawing machine
+(plotter?) using nanobeam aluminium extrusion
+
+* General Thoughts
+  Controlled using raspberyy pi zero, with a 4tronix quad stepper
+  motor hat.
+
+  Intention is to make it light enough that it could be mounted to a
+  whiteboard using suckers. Initially though, will be using flat on a
+  table.
+
+** Linear Movement
+   3D Printed component to hold one nanobeam and slide along the
+   grooves of another.
+
+** Motors
+   Small stepper motors.
+   Intended to be used in scanners? Certainly, look the same as ones
+   in Canon lide scanners I've disassembled. Probably high speed but
+   low torque so will need some gearing to move the mechanism around.
